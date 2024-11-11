@@ -72,6 +72,7 @@ pub struct Element {
     pub element_id: String,
     pub part_num: String,
     pub color_id: i32,
+    // Not sure what this is?
     pub design_id: Option<i32>,
 }
 
