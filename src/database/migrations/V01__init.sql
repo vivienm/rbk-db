@@ -13,7 +13,8 @@ CREATE TABLE part_categories (
 CREATE TABLE parts (
     part_num TEXT PRIMARY KEY,
     name TEXT NOT NULL,
-    part_cat_id INTEGER NOT NULL REFERENCES part_categories(id)
+    part_cat_id INTEGER NOT NULL REFERENCES part_categories(id),
+    part_material TEXT NOT NULL
 ) STRICT;
 
 -- NOTE: There might be several relationships between the same parts, with

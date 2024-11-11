@@ -3,7 +3,10 @@ use std::path::Path;
 use rusqlite::{params, CachedStatement, Connection, Transaction};
 use url::Url;
 
-use crate::{rebrikable::record, types::PartRelationType};
+use crate::{
+    rebrikable::record,
+    types::{PartMaterial, PartRelationType},
+};
 
 mod embedded {
     refinery::embed_migrations!("./src/database/migrations");
@@ -164,13 +167,19 @@ impl InsertableSealed for record::Part {
         INSERT INTO parts (
             part_num,
             name,
-            part_cat_id
+            part_cat_id,
+            part_material
         )
-        VALUES (?, ?, ?)
+        VALUES (?, ?, ?, ?)
     "#;
 
     fn insert_row(stmt: &mut CachedStatement, row: &record::Part) -> anyhow::Result<()> {
-        stmt.execute(params![&row.part_num, &row.name, &row.part_cat_id])?;
+        stmt.execute(params![
+            &row.part_num,
+            &row.name,
+            &row.part_cat_id,
+            encode_part_material(row.part_material)
+        ])?;
         Ok(())
     }
 }
@@ -351,6 +360,18 @@ fn encode_relation_type(rel_type: PartRelationType) -> &'static str {
         PartRelationType::Mold => "mold",
         PartRelationType::Pattern => "pattern",
         PartRelationType::Alternate => "alternate",
+    }
+}
+
+fn encode_part_material(part_material: PartMaterial) -> &'static str {
+    match part_material {
+        PartMaterial::CardboardPaper => "cardboard/paper",
+        PartMaterial::Cloth => "cloth",
+        PartMaterial::FlexiblePlastic => "flexible plastic",
+        PartMaterial::Foam => "foam",
+        PartMaterial::Metal => "metal",
+        PartMaterial::Plastic => "plastic",
+        PartMaterial::Rubber => "rubber",
     }
 }
 
