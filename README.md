@@ -1,6 +1,6 @@
 # rbk-db
 
-Import the Rebrickable LEGO database into SQLite.
+Import the [Rebrickable LEGO database](https://rebrickable.com/downloads/) into SQLite.
 
 ```shell
 rbk-db rebrickable.db
