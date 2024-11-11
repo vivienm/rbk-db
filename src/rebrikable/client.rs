@@ -21,6 +21,9 @@ impl Client {
         T: Table,
         P: AsRef<Path>,
     {
+        // To avoid consistency issues with untimestamped URLs and to avoid scraping the
+        // main page for proper timestamps, the simplest solution is to use the
+        // current timestamp.
         let url = format!(
             "https://cdn.rebrickable.com/media/downloads/{}?{}",
             T::FILENAME,
