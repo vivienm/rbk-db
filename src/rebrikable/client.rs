@@ -29,7 +29,7 @@ impl Client {
             T::FILENAME,
             timestamp
         );
-        tracing::info!("downloading table {} ({})", T::NAME, url);
+        tracing::info!("downloading table {}", T::NAME);
         let mut response = self.reqwest.get(&url).send().await?.error_for_status()?;
 
         let mut file = File::create(&path).await?;
