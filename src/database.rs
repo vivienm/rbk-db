@@ -5,7 +5,7 @@ use url::Url;
 
 use crate::{
     rebrikable::record,
-    types::{PartMaterial, PartRelationType},
+    types::{PartMaterial, PartRelationType, Rgb},
 };
 
 mod embedded {
@@ -88,7 +88,7 @@ impl InsertableSealed for record::Inventory {
     "#;
 
     fn insert_row(stmt: &mut CachedStatement, row: &record::Inventory) -> anyhow::Result<()> {
-        stmt.execute(params![&row.id, &row.version, &row.set_num])?;
+        stmt.execute(params![row.id, row.version, row.set_num])?;
         Ok(())
     }
 }
@@ -110,12 +110,12 @@ impl InsertableSealed for record::InventoryPart {
 
     fn insert_row(stmt: &mut CachedStatement, row: &record::InventoryPart) -> anyhow::Result<()> {
         stmt.execute(params![
-            &row.inventory_id,
-            &row.part_num,
-            &row.color_id,
-            &row.quantity,
-            &row.is_spare,
-            &row.img_url.as_ref().map(Url::as_str)
+            row.inventory_id,
+            row.part_num,
+            row.color_id,
+            row.quantity,
+            row.is_spare,
+            row.img_url.as_ref().map(Url::as_str),
         ])?;
         Ok(())
     }
@@ -137,7 +137,7 @@ impl InsertableSealed for record::InventoryMinifig {
         stmt: &mut CachedStatement,
         row: &record::InventoryMinifig,
     ) -> anyhow::Result<()> {
-        stmt.execute(params![&row.inventory_id, &row.fig_num, &row.quantity])?;
+        stmt.execute(params![row.inventory_id, row.fig_num, row.quantity])?;
         Ok(())
     }
 }
@@ -155,7 +155,7 @@ impl InsertableSealed for record::InventorySet {
     "#;
 
     fn insert_row(stmt: &mut CachedStatement, row: &record::InventorySet) -> anyhow::Result<()> {
-        stmt.execute(params![&row.inventory_id, &row.set_num, &row.quantity])?;
+        stmt.execute(params![row.inventory_id, row.set_num, row.quantity])?;
         Ok(())
     }
 }
@@ -175,10 +175,10 @@ impl InsertableSealed for record::Part {
 
     fn insert_row(stmt: &mut CachedStatement, row: &record::Part) -> anyhow::Result<()> {
         stmt.execute(params![
-            &row.part_num,
-            &row.name,
-            &row.part_cat_id,
-            encode_part_material(row.part_material)
+            row.part_num,
+            row.name,
+            row.part_cat_id,
+            encode_part_material(row.part_material),
         ])?;
         Ok(())
     }
@@ -196,7 +196,7 @@ impl InsertableSealed for record::PartCategory {
     "#;
 
     fn insert_row(stmt: &mut CachedStatement, row: &record::PartCategory) -> anyhow::Result<()> {
-        stmt.execute(params![&row.id, &row.name])?;
+        stmt.execute(params![row.id, row.name])?;
         Ok(())
     }
 }
@@ -219,8 +219,8 @@ impl InsertableSealed for record::PartRelationship {
     ) -> anyhow::Result<()> {
         stmt.execute(params![
             encode_relation_type(row.rel_type),
-            &row.child_part_num,
-            &row.parent_part_num
+            row.child_part_num,
+            row.parent_part_num,
         ])?;
         Ok(())
     }
@@ -233,13 +233,19 @@ impl InsertableSealed for record::Element {
         INSERT INTO elements (
             element_id,
             part_num,
-            color_id
+            color_id,
+            design_id
         )
-        VALUES (?, ?, ?)
+        VALUES (?, ?, ?, ?)
     "#;
 
     fn insert_row(stmt: &mut CachedStatement, row: &record::Element) -> anyhow::Result<()> {
-        stmt.execute(params![&row.element_id, &row.part_num, &row.color_id])?;
+        stmt.execute(params![
+            row.element_id,
+            row.part_num,
+            row.color_id,
+            row.design_id,
+        ])?;
         Ok(())
     }
 }
@@ -258,12 +264,7 @@ impl InsertableSealed for record::Color {
     "#;
 
     fn insert_row(stmt: &mut CachedStatement, row: &record::Color) -> anyhow::Result<()> {
-        stmt.execute(params![
-            &row.id,
-            &row.name,
-            &row.rgb.to_string(),
-            row.is_trans
-        ])?;
+        stmt.execute(params![row.id, row.name, encode_rgb(row.rgb), row.is_trans])?;
         Ok(())
     }
 }
@@ -283,10 +284,10 @@ impl InsertableSealed for record::Minifig {
 
     fn insert_row(stmt: &mut CachedStatement, row: &record::Minifig) -> anyhow::Result<()> {
         stmt.execute(params![
-            &row.fig_num,
-            &row.name,
-            &row.num_parts,
-            &row.img_url.as_ref().map(Url::as_str)
+            row.fig_num,
+            row.name,
+            row.num_parts,
+            row.img_url.as_str(),
         ])?;
         Ok(())
     }
@@ -309,12 +310,12 @@ impl InsertableSealed for record::Set {
 
     fn insert_row(stmt: &mut CachedStatement, row: &record::Set) -> anyhow::Result<()> {
         stmt.execute(params![
-            &row.set_num,
-            &row.name,
-            &row.year,
-            &row.theme_id,
-            &row.num_parts,
-            &row.img_url.as_ref().map(Url::as_str)
+            row.set_num,
+            row.name,
+            row.year,
+            row.theme_id,
+            row.num_parts,
+            row.img_url.as_str(),
         ])?;
         Ok(())
     }
@@ -347,9 +348,13 @@ impl InsertableSealed for record::Theme {
     }
 
     fn insert_row(stmt: &mut CachedStatement, row: &record::Theme) -> anyhow::Result<()> {
-        stmt.execute(params![&row.id, &row.name, &row.parent_id])?;
+        stmt.execute(params![row.id, row.name, row.parent_id])?;
         Ok(())
     }
+}
+
+fn encode_rgb(rgb: Rgb) -> String {
+    format!("{:02x}{:02x}{:02x}", rgb.r, rgb.g, rgb.b)
 }
 
 fn encode_relation_type(rel_type: PartRelationType) -> &'static str {

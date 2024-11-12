@@ -92,8 +92,8 @@ pub struct Minifig {
     pub fig_num: String,
     pub name: String,
     pub num_parts: i32,
-    #[serde(deserialize_with = "deserialize_option_url")]
-    pub img_url: Option<Url>,
+    #[serde(deserialize_with = "deserialize_url")]
+    pub img_url: Url,
 }
 
 #[derive(Clone, Eq, PartialEq, Debug, Deserialize)]
@@ -104,8 +104,8 @@ pub struct Set {
     pub year: i32,
     pub theme_id: i32,
     pub num_parts: i32,
-    #[serde(deserialize_with = "deserialize_option_url")]
-    pub img_url: Option<Url>,
+    #[serde(deserialize_with = "deserialize_url")]
+    pub img_url: Url,
 }
 
 #[derive(Clone, Eq, PartialEq, Debug, Deserialize)]
@@ -126,6 +126,14 @@ where
         "f" => Ok(false),
         _ => Err(serde::de::Error::custom("expected 't' or 'f'")),
     }
+}
+
+fn deserialize_url<'de, D>(deserializer: D) -> Result<Url, D::Error>
+where
+    D: serde::Deserializer<'de>,
+{
+    let s: String = serde::Deserialize::deserialize(deserializer)?;
+    Url::parse(&s).map_err(serde::de::Error::custom)
 }
 
 fn deserialize_option_url<'de, D>(deserializer: D) -> Result<Option<Url>, D::Error>
