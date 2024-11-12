@@ -9,7 +9,7 @@ sqlite3 rebrickable.db
 
 ## General organization
 
-![Database schema](https://rebrickable.com/static/img/diagrams/downloads_schema_v3.png)
+![Database schema](./assets/schema.png)
 
 An *inventory* represents either:
 * A specific version of a LEGO set, which includes:
