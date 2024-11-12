@@ -3,7 +3,7 @@
 Import the [Rebrickable LEGO database](https://rebrickable.com/downloads/) into SQLite.
 
 ```shell
-rbk-db rebrickable.db
+rbk-db dump
 sqlite3 rebrickable.db
 ```
 
