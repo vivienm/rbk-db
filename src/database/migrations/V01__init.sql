@@ -36,7 +36,7 @@ CREATE TABLE elements (
 CREATE TABLE minifigs (
     fig_num TEXT PRIMARY KEY CHECK (fig_num GLOB 'fig-[0-9][0-9][0-9][0-9][0-9][0-9]'),
     name TEXT NOT NULL,
-    num_parts INTEGER NOT NULL,
+    num_parts INTEGER NOT NULL CHECK (num_parts >= 0),
     img_url TEXT NOT NULL
 ) STRICT;
 
@@ -51,7 +51,7 @@ CREATE TABLE sets (
     name TEXT NOT NULL,
     year INTEGER NOT NULL CHECK (year >= 1932),
     theme_id INTEGER NOT NULL REFERENCES themes(id),
-    num_parts INTEGER NOT NULL,
+    num_parts INTEGER NOT NULL CHECK (num_parts >= 0),
     img_url TEXT NOT NULL
 ) STRICT;
 
