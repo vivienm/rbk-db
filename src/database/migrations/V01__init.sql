@@ -73,6 +73,8 @@ CREATE TABLE inventory_parts (
     UNIQUE (inventory_id, part_num, color_id, is_spare)
 ) STRICT;
 
+CREATE INDEX inventory_parts_part_num_idx ON inventory_parts(part_num);
+
 CREATE TABLE inventory_minifigs (
     inventory_id INTEGER NOT NULL REFERENCES inventories(id),
     fig_num TEXT NOT NULL REFERENCES minifigs(fig_num),
