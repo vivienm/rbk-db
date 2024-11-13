@@ -124,7 +124,10 @@ where
     match s.as_str() {
         "t" => Ok(true),
         "f" => Ok(false),
-        _ => Err(serde::de::Error::custom("expected 't' or 'f'")),
+        _ => Err(serde::de::Error::custom(format!(
+            "expected {:?} or {:?}, got {:?}",
+            "t", "f", s
+        ))),
     }
 }
 
