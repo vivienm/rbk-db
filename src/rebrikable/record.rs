@@ -122,8 +122,8 @@ where
 {
     let s: String = serde::Deserialize::deserialize(deserializer)?;
     match s.as_str() {
-        "t" => Ok(true),
-        "f" => Ok(false),
+        "True" => Ok(true),
+        "False" => Ok(false),
         _ => Err(serde::de::Error::custom(format!(
             "expected {:?} or {:?}, got {:?}",
             "t", "f", s
