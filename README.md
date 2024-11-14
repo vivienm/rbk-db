@@ -16,7 +16,7 @@ The complete database schema is available [here](./src/database/migrations/V01__
 An *inventory* represents either:
 * A specific version of a LEGO set, which includes:
   - A list of subsets (table `inventory_sets`);
-  - A list of parts, excluding parts of subsets and minifigures (table `inventory_parts`);
+  - A list of parts (table `inventory_parts`), excluding parts of subsets and minifigures;
   - A list of minifigures (table `inventory_minifigs`);
 * A minifigure, which includes:
   - A list of parts (table `inventory_parts`).
