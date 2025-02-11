@@ -69,7 +69,7 @@ pub struct DownloadHandler<'a, P> {
     timestamp: u64,
 }
 
-impl<'a, P> DownloadHandler<'a, P> {
+impl<P> DownloadHandler<'_, P> {
     pub async fn execute(self) -> anyhow::Result<()>
     where
         P: AsRef<Path>,
