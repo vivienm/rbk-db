@@ -84,6 +84,10 @@ pub struct Color {
     pub rgb: Rgb,
     #[serde(deserialize_with = "deserialize_bool")]
     pub is_trans: bool,
+    pub num_parts: u32,
+    pub num_sets: u32,
+    pub y1: Option<u32>,
+    pub y2: Option<u32>,
 }
 
 #[derive(Clone, Eq, PartialEq, Debug, Deserialize)]
