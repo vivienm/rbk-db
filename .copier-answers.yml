@@ -1,16 +1,16 @@
 # Changes here will be overwritten by Copier. NEVER EDIT MANUALLY.
 
-_commit: c965823
+_commit: 2ee2c93
 _src_path: https://github.com/vivienm/copier-rust
-author_name: Vivien Maisonneuve
 copyright_holder: Vivien Maisonneuve
 copyright_year: 2024
-github_account: vivienm
-hosting_platform: github
+forge: github
+github_repo: rbk-db
+github_user: vivienm
 license: MIT
 package_name: rbk-db
 project_description: Import the Rebrickable LEGO database into SQLite.
 project_name: rbk-db
 project_type: application
-repo_name: rbk-db
 rust_toolchain: stable
+user_name: Vivien Maisonneuve
