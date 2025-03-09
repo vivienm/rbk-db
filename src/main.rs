@@ -9,10 +9,10 @@ use self::commands::Command;
 #[clap(about)]
 struct Args {
     /// Set the verbosity level for log messages.
-    #[clap(global = true, long, default_value = "info", env = "RBK_DB_LOG_LEVEL")]
+    #[arg(global = true, long, default_value = "info", env = "RBK_DB_LOG_LEVEL")]
     log_level: tracing::level_filters::LevelFilter,
     /// The command to execute.
-    #[clap(subcommand)]
+    #[command(subcommand)]
     command: Command,
 }
 
