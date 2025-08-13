@@ -41,7 +41,7 @@ impl Client {
         Ok(())
     }
 
-    pub fn download_tables<P>(&self, output_dir: P, timestamp: u64) -> DownloadHandler<P>
+    pub fn download_tables<P>(&self, output_dir: P, timestamp: u64) -> DownloadHandler<'_, P>
     where
         P: AsRef<Path>,
     {
