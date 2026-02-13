@@ -8,16 +8,16 @@ license = "MIT"
 publish = false
 
 [dependencies]
-anyhow = "1.0.100"
-clap = { version = "4.5.57", features = ["cargo", "derive", "env"] }
-clap_complete = "4.5.65"
+anyhow = "1.0.101"
+clap = { version = "4.5.58", features = ["cargo", "derive", "env"] }
+clap_complete = "4.5.66"
 csv = "1.4.0"
 flate2 = "1.1.9"
 refinery = { version = "0.8.16", features = ["rusqlite"] }
 reqwest = "0.12.28"
 rusqlite = { version = "0.31.0", features = ["bundled"] }
 serde = { version = "1.0.228", features = ["derive"] }
-tempfile = "3.24.0"
+tempfile = "3.25.0"
 tokio = { version = "1.49.0", features = ["fs", "macros", "rt"] }
 tracing = "0.1.44"
 tracing-subscriber = "0.3.22"
