@@ -258,13 +258,26 @@ impl InsertableSealed for record::Color {
             id,
             name,
             rgb,
-            is_trans
+            is_trans,
+            num_parts,
+            num_sets,
+            y1,
+            y2
         )
-        VALUES (?, ?, ?, ?)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
     "#;
 
     fn insert_row(stmt: &mut CachedStatement, row: &record::Color) -> anyhow::Result<()> {
-        stmt.execute(params![row.id, row.name, encode_rgb(row.rgb), row.is_trans])?;
+        stmt.execute(params![
+            row.id,
+            row.name,
+            encode_rgb(row.rgb),
+            row.is_trans,
+            row.num_parts,
+            row.num_sets,
+            row.y1,
+            row.y2,
+        ])?;
         Ok(())
     }
 }
