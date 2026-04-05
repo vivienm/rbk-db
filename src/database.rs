@@ -1,6 +1,6 @@
 use std::path::Path;
 
-use rusqlite::{params, CachedStatement, Connection, Transaction};
+use rusqlite::{CachedStatement, Connection, Transaction, params};
 use url::Url;
 
 use crate::{
