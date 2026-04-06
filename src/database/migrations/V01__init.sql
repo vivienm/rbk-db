@@ -2,7 +2,15 @@ CREATE TABLE colors (
     id INTEGER PRIMARY KEY,
     name TEXT NOT NULL,
     rgb TEXT NOT NULL CHECK (rgb GLOB '[0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f]'),
-    is_trans INTEGER NOT NULL CHECK (is_trans IN (0, 1))
+    is_trans INTEGER NOT NULL CHECK (is_trans IN (0, 1)),
+    num_parts INTEGER NOT NULL CHECK (num_parts >= 0),
+    num_sets INTEGER NOT NULL CHECK (num_sets >= 0),
+    y1 INTEGER,
+    y2 INTEGER,
+    CHECK (
+        (y1 IS NULL OR y1 >= 1932) AND
+        (y2 IS NULL OR (y2 >= 1932 AND (y1 IS NULL OR y2 >= y1)))
+    )
 ) STRICT;
 
 CREATE TABLE part_categories (
