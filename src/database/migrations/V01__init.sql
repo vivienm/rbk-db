@@ -4,7 +4,13 @@ CREATE TABLE colors (
     rgb TEXT NOT NULL
         CHECK (rgb GLOB '[0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f]'),
     is_trans INTEGER NOT NULL
-        CHECK (is_trans IN (0, 1))
+        CHECK (is_trans IN (0, 1)),
+    num_parts INTEGER NOT NULL
+        CHECK (num_parts >= 0),
+    num_sets INTEGER NOT NULL
+        CHECK (num_sets >= 0),
+    first_year INTEGER,
+    last_year INTEGER
 ) STRICT;
 
 CREATE TABLE part_categories (

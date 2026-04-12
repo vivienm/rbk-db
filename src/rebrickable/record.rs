@@ -86,8 +86,10 @@ pub struct Color {
     pub is_trans: bool,
     pub num_parts: u32,
     pub num_sets: u32,
-    pub y1: Option<u32>,
-    pub y2: Option<u32>,
+    #[serde(rename = "y1")]
+    pub first_year: Option<u32>,
+    #[serde(rename = "y2")]
+    pub last_year: Option<u32>,
 }
 
 #[derive(Clone, Eq, PartialEq, Debug, Deserialize)]
