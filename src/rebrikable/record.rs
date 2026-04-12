@@ -120,17 +120,20 @@ pub struct Theme {
     pub parent_id: Option<i32>,
 }
 
+const TRUE_STR: &str = "True";
+const FALSE_STR: &str = "False";
+
 fn deserialize_bool<'de, D>(deserializer: D) -> Result<bool, D::Error>
 where
     D: serde::Deserializer<'de>,
 {
     let s: String = serde::Deserialize::deserialize(deserializer)?;
     match s.as_str() {
-        "True" => Ok(true),
-        "False" => Ok(false),
+        TRUE_STR => Ok(true),
+        FALSE_STR => Ok(false),
         _ => Err(serde::de::Error::custom(format!(
             "expected {:?} or {:?}, got {:?}",
-            "t", "f", s
+            TRUE_STR, FALSE_STR, s
         ))),
     }
 }
