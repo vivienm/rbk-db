@@ -9,8 +9,10 @@ CREATE TABLE colors (
         CHECK (num_parts >= 0),
     num_sets INTEGER NOT NULL
         CHECK (num_sets >= 0),
-    first_year INTEGER,
+    first_year INTEGER
+        CHECK (first_year IS NULL OR first_year >= 1932),
     last_year INTEGER
+        CHECK (last_year IS NULL OR (last_year >= 1932 AND (first_year IS NULL OR last_year >= first_year)))
 ) STRICT;
 
 CREATE TABLE part_categories (
