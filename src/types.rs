@@ -14,12 +14,18 @@ impl FromStr for Rgb {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         let s = s.strip_prefix('#').unwrap_or(s);
-        if s.len() != 6 {
+        let b = s.as_bytes();
+        if b.len() != 6 {
             return Err(ParseRgbError(()));
         }
-        let r = u8::from_str_radix(&s[0..2], 16).map_err(|_| ParseRgbError(()))?;
-        let g = u8::from_str_radix(&s[2..4], 16).map_err(|_| ParseRgbError(()))?;
-        let b = u8::from_str_radix(&s[4..6], 16).map_err(|_| ParseRgbError(()))?;
+        let parse = |hi, lo| -> Result<u8, ParseRgbError> {
+            let hi = char::from(hi).to_digit(16).ok_or(ParseRgbError(()))? as u8;
+            let lo = char::from(lo).to_digit(16).ok_or(ParseRgbError(()))? as u8;
+            Ok(hi << 4 | lo)
+        };
+        let r = parse(b[0], b[1])?;
+        let g = parse(b[2], b[3])?;
+        let b = parse(b[4], b[5])?;
         Ok(Rgb { r, g, b })
     }
 }
