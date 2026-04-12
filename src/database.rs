@@ -28,6 +28,7 @@ impl Database {
     {
         let path = path.as_ref();
         let mut conn = Connection::open(path)?;
+        conn.pragma_update(None, "foreign_keys", "ON")?;
         embedded::migrations::runner().run(&mut conn)?;
         Ok(Self::new(conn))
     }
