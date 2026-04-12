@@ -4,7 +4,7 @@ use rusqlite::{CachedStatement, Connection, Transaction, params};
 use url::Url;
 
 use crate::{
-    rebrikable::record,
+    rebrickable::record,
     types::{PartMaterial, PartRelationType, Rgb},
 };
 

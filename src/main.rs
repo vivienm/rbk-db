@@ -1,6 +1,6 @@
 mod commands;
 mod database;
-mod rebrikable;
+mod rebrickable;
 mod types;
 
 use self::commands::Command;

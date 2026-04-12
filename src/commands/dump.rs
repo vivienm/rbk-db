@@ -6,7 +6,7 @@ use std::{
 
 use crate::{
     database::{Database, Insertable},
-    rebrikable::{Client, Table, table},
+    rebrickable::{Client, Table, table},
 };
 
 #[derive(Debug, clap::Parser)]
