@@ -8,10 +8,6 @@ use crate::{
     types::{PartMaterial, PartRelationType, Rgb},
 };
 
-mod embedded {
-    refinery::embed_migrations!("./src/database/migrations");
-}
-
 #[derive(Debug)]
 pub struct Database {
     conn: Connection,
@@ -27,9 +23,9 @@ impl Database {
         P: AsRef<Path>,
     {
         let path = path.as_ref();
-        let mut conn = Connection::open(path)?;
+        let conn = Connection::open(path)?;
         conn.pragma_update(None, "foreign_keys", "ON")?;
-        embedded::migrations::runner().run(&mut conn)?;
+        conn.execute_batch(include_str!("database/schema.sql"))?;
         Ok(Self::new(conn))
     }
 
