@@ -3,10 +3,7 @@ use std::path::Path;
 use rusqlite::{CachedStatement, Connection, Transaction, params};
 use url::Url;
 
-use crate::{
-    rebrickable::record,
-    types::{PartMaterial, PartRelationType, Rgb},
-};
+use crate::{rebrickable::record, types::Rgb};
 
 #[derive(Debug)]
 pub struct Database {
@@ -175,7 +172,7 @@ impl InsertableSealed for record::Part {
             row.part_num,
             row.name,
             row.part_cat_id,
-            encode_part_material(row.part_material),
+            row.part_material.as_str(),
         ])?;
         Ok(())
     }
@@ -215,7 +212,7 @@ impl InsertableSealed for record::PartRelationship {
         row: &record::PartRelationship,
     ) -> anyhow::Result<()> {
         stmt.execute(params![
-            encode_relation_type(row.rel_type),
+            row.rel_type.as_str(),
             row.child_part_num,
             row.parent_part_num,
         ])?;
@@ -365,29 +362,6 @@ impl InsertableSealed for record::Theme {
 
 fn encode_rgb(rgb: Rgb) -> String {
     format!("{:02x}{:02x}{:02x}", rgb.r, rgb.g, rgb.b)
-}
-
-fn encode_relation_type(rel_type: PartRelationType) -> &'static str {
-    match rel_type {
-        PartRelationType::Print => "print",
-        PartRelationType::Pair => "pair",
-        PartRelationType::SubPart => "subpart",
-        PartRelationType::Mold => "mold",
-        PartRelationType::Pattern => "pattern",
-        PartRelationType::Alternate => "alternate",
-    }
-}
-
-fn encode_part_material(part_material: PartMaterial) -> &'static str {
-    match part_material {
-        PartMaterial::CardboardPaper => "cardboard/paper",
-        PartMaterial::Cloth => "cloth",
-        PartMaterial::FlexiblePlastic => "flexible plastic",
-        PartMaterial::Foam => "foam",
-        PartMaterial::Metal => "metal",
-        PartMaterial::Plastic => "plastic",
-        PartMaterial::Rubber => "rubber",
-    }
 }
 
 #[cfg(test)]

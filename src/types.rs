@@ -67,16 +67,22 @@ pub enum PartRelationType {
     Alternate,
 }
 
-impl fmt::Display for PartRelationType {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        f.write_str(match self {
+impl PartRelationType {
+    pub fn as_str(self) -> &'static str {
+        match self {
             Self::Print => "print",
             Self::Pair => "pair",
             Self::SubPart => "subpart",
             Self::Mold => "mold",
             Self::Pattern => "pattern",
             Self::Alternate => "alternate",
-        })
+        }
+    }
+}
+
+impl fmt::Display for PartRelationType {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        f.write_str(self.as_str())
     }
 }
 
@@ -89,6 +95,26 @@ pub enum PartMaterial {
     Metal,
     Plastic,
     Rubber,
+}
+
+impl PartMaterial {
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::CardboardPaper => "cardboard/paper",
+            Self::Cloth => "cloth",
+            Self::FlexiblePlastic => "flexible plastic",
+            Self::Foam => "foam",
+            Self::Metal => "metal",
+            Self::Plastic => "plastic",
+            Self::Rubber => "rubber",
+        }
+    }
+}
+
+impl fmt::Display for PartMaterial {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        f.write_str(self.as_str())
+    }
 }
 
 #[cfg(test)]
