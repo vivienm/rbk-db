@@ -26,10 +26,11 @@ impl Database {
         Ok(Self::new(conn))
     }
 
-    pub fn insert_many<'a, R, I>(&mut self, rows: I) -> anyhow::Result<()>
+    pub fn insert_many<R, I, E>(&mut self, rows: I) -> anyhow::Result<()>
     where
-        R: Insertable + 'a + ?Sized,
-        I: IntoIterator<Item = &'a R>,
+        R: Insertable,
+        I: IntoIterator<Item = Result<R, E>>,
+        E: Into<anyhow::Error>,
     {
         R::insert_many(&mut self.conn, rows)
     }
@@ -38,7 +39,7 @@ impl Database {
 #[allow(private_bounds)]
 pub trait Insertable: InsertableSealed {}
 
-trait InsertableSealed {
+trait InsertableSealed: Sized {
     const INSERT_STMT: &str;
 
     fn insert_row(stmt: &mut CachedStatement, row: &Self) -> anyhow::Result<()>;
@@ -51,16 +52,17 @@ trait InsertableSealed {
         Ok(())
     }
 
-    fn insert_many<'a, I>(conn: &mut Connection, rows: I) -> anyhow::Result<()>
+    fn insert_many<I, E>(conn: &mut Connection, rows: I) -> anyhow::Result<()>
     where
-        Self: 'a,
-        I: IntoIterator<Item = &'a Self>,
+        I: IntoIterator<Item = Result<Self, E>>,
+        E: Into<anyhow::Error>,
     {
         let tx = conn.transaction()?;
         Self::pre_hook(&tx)?;
         let mut stmt = tx.prepare_cached(Self::INSERT_STMT)?;
         for row in rows {
-            Self::insert_row(&mut stmt, row)?;
+            let row = row.map_err(Into::into)?;
+            Self::insert_row(&mut stmt, &row)?;
         }
         drop(stmt);
         Self::post_hook(&tx)?;

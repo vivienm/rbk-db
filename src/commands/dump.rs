@@ -80,9 +80,7 @@ where
 {
     let table_path = dump_dir.as_ref().join(T::FILENAME);
     let table_file = File::open(table_path)?;
-    let records = T::read_records_gz(table_file);
-    let records = records.collect::<Result<Vec<_>, _>>()?;
-    tracing::info!("copying {} records to table {}", records.len(), T::NAME);
-    db.insert_many(&records)?;
+    tracing::info!("copying records to table {}", T::NAME);
+    db.insert_many(T::read_records_gz(table_file))?;
     Ok(())
 }
