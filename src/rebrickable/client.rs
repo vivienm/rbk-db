@@ -122,7 +122,10 @@ where
     output_path.push(T::FILENAME);
 
     async move {
-        let _permit = semaphore.acquire().await.unwrap();
+        let _permit = semaphore
+            .acquire()
+            .await
+            .expect("semaphore is never closed");
         client
             .download_table::<T, _>(&output_path, timestamp)
             .await?;
