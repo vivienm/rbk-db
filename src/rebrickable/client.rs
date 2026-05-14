@@ -1,4 +1,4 @@
-use std::{future::Future, path::Path, sync::Arc};
+use std::{future::Future, path::Path, sync::Arc, time::Duration};
 
 use tokio::{fs::File, io::AsyncWriteExt, sync::Semaphore, task::JoinSet};
 
@@ -12,7 +12,11 @@ pub struct Client {
 impl Client {
     pub fn new() -> Self {
         Self {
-            reqwest: reqwest::Client::new(),
+            reqwest: reqwest::Client::builder()
+                .connect_timeout(Duration::from_secs(10))
+                .timeout(Duration::from_secs(300))
+                .build()
+                .expect("reqwest client builds with default TLS"),
         }
     }
 
