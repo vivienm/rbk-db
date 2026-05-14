@@ -335,22 +335,16 @@ impl InsertableSealed for record::Theme {
         INSERT INTO themes (
             id,
             name,
-            tmp_parent_id
+            parent_id
         )
         VALUES (?, ?, ?)
     "#;
 
-    // Rows are not inserted in the correct (topological) order, so some records
-    // have a `parent_id` that does not exist yet. We add a temporary column to
-    // store the `parent_id` and update it after all rows have been inserted.
+    // Rows are not inserted in topological order, so some records reference a
+    // `parent_id` that does not yet exist. Defer foreign-key checks to commit
+    // time so the self-reference resolves once every row is inserted.
     fn pre_hook(tx: &Transaction) -> anyhow::Result<()> {
-        tx.execute("ALTER TABLE themes ADD COLUMN tmp_parent_id INTEGER", [])?;
-        Ok(())
-    }
-
-    fn post_hook(tx: &Transaction) -> anyhow::Result<()> {
-        tx.execute("UPDATE themes SET parent_id = tmp_parent_id", [])?;
-        tx.execute("ALTER TABLE themes DROP COLUMN tmp_parent_id", [])?;
+        tx.pragma_update(None, "defer_foreign_keys", "ON")?;
         Ok(())
     }
 
