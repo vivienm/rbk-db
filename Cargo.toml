@@ -2,7 +2,7 @@
 name = "rbk-db"
 version = "0.1.0"
 edition = "2024"
-description = "Import the Rebrickable LEGO database into SQLite."
+description = "Import the Rebrickable LEGO database into SQLite"
 repository = "https://github.com/vivienm/rbk-db"
 license = "MIT"
 publish = false

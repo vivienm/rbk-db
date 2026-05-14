@@ -1,6 +1,8 @@
 set shell := ["bash", "-uc"]
 
-ci: fmt clippy test audit typos
+ci: lint audit test
+
+lint: fmt clippy typos
 
 fmt:
     cargo fmt --check
