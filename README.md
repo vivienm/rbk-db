@@ -11,7 +11,7 @@ sqlite3 rebrickable.db
 
 ![Database schema](./assets/schema.png)
 
-The complete database schema is available [here](./src/database/migrations/V01__init.sql).
+The complete database schema is available [here](./src/database/schema.sql).
 
 An *inventory* represents either:
 * A specific version of a LEGO set, which includes:
