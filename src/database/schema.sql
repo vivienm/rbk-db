@@ -1,4 +1,4 @@
-CREATE TABLE colors (
+CREATE TABLE IF NOT EXISTS colors (
     id INTEGER PRIMARY KEY,
     name TEXT NOT NULL,
     rgb TEXT NOT NULL
@@ -15,12 +15,12 @@ CREATE TABLE colors (
         CHECK (last_year IS NULL OR (last_year >= 1932 AND (first_year IS NULL OR last_year >= first_year)))
 ) STRICT;
 
-CREATE TABLE part_categories (
+CREATE TABLE IF NOT EXISTS part_categories (
     id INTEGER PRIMARY KEY,
     name TEXT NOT NULL
 ) STRICT;
 
-CREATE TABLE parts (
+CREATE TABLE IF NOT EXISTS parts (
     part_num TEXT PRIMARY KEY
         CHECK (part_num NOT GLOB 'fig-[0-9][0-9][0-9][0-9][0-9][0-9]'),
     name TEXT NOT NULL,
@@ -35,7 +35,7 @@ CREATE TABLE parts (
 
 -- NOTE: There might be several relationships between the same parts, with
 -- different types.
-CREATE TABLE part_relationships (
+CREATE TABLE IF NOT EXISTS part_relationships (
     rel_type TEXT NOT NULL
         CHECK (rel_type IN (
             'print', 'pair', 'subpart', 'mold', 'pattern', 'alternate'
@@ -47,7 +47,7 @@ CREATE TABLE part_relationships (
     UNIQUE (rel_type, child_part_num, parent_part_num)
 ) STRICT;
 
-CREATE TABLE elements (
+CREATE TABLE IF NOT EXISTS elements (
     element_id TEXT PRIMARY KEY,
     part_num TEXT NOT NULL
         REFERENCES parts(part_num),
@@ -56,7 +56,7 @@ CREATE TABLE elements (
     design_id INTEGER
 ) STRICT;
 
-CREATE TABLE minifigs (
+CREATE TABLE IF NOT EXISTS minifigs (
     fig_num TEXT PRIMARY KEY
         CHECK (fig_num GLOB 'fig-[0-9][0-9][0-9][0-9][0-9][0-9]'),
     name TEXT NOT NULL,
@@ -65,14 +65,14 @@ CREATE TABLE minifigs (
     img_url TEXT NOT NULL
 ) STRICT;
 
-CREATE TABLE themes (
+CREATE TABLE IF NOT EXISTS themes (
     id INTEGER PRIMARY KEY,
     name TEXT NOT NULL,
     parent_id INTEGER
         REFERENCES themes(id)
 ) STRICT;
 
-CREATE TABLE sets (
+CREATE TABLE IF NOT EXISTS sets (
     set_num TEXT PRIMARY KEY,
     name TEXT NOT NULL,
     year INTEGER NOT NULL
@@ -86,13 +86,13 @@ CREATE TABLE sets (
 
 -- NOTE: `set_num` references either `sets.set_num` or `minifigs.fig_num`. In
 -- the latter case, it starts with `fig-`.
-CREATE TABLE inventories (
+CREATE TABLE IF NOT EXISTS inventories (
     id INTEGER PRIMARY KEY,
     version INTEGER NOT NULL,
     set_num TEXT NOT NULL
 ) STRICT;
 
-CREATE TABLE inventory_parts (
+CREATE TABLE IF NOT EXISTS inventory_parts (
     inventory_id INTEGER NOT NULL
         REFERENCES inventories(id),
     part_num TEXT NOT NULL
@@ -107,9 +107,9 @@ CREATE TABLE inventory_parts (
     UNIQUE (inventory_id, part_num, color_id, is_spare)
 ) STRICT;
 
-CREATE INDEX inventory_parts_part_num_idx ON inventory_parts(part_num);
+CREATE INDEX IF NOT EXISTS inventory_parts_part_num_idx ON inventory_parts(part_num);
 
-CREATE TABLE inventory_minifigs (
+CREATE TABLE IF NOT EXISTS inventory_minifigs (
     inventory_id INTEGER NOT NULL
         REFERENCES inventories(id),
     fig_num TEXT NOT NULL
@@ -119,7 +119,7 @@ CREATE TABLE inventory_minifigs (
     UNIQUE (inventory_id, fig_num)
 ) STRICT;
 
-CREATE TABLE inventory_sets (
+CREATE TABLE IF NOT EXISTS inventory_sets (
     inventory_id INTEGER NOT NULL
         REFERENCES inventories(id),
     set_num TEXT NOT NULL
