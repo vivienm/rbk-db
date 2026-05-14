@@ -22,6 +22,11 @@ impl Database {
         let path = path.as_ref();
         let conn = Connection::open(path)?;
         conn.pragma_update(None, "foreign_keys", "ON")?;
+        // Tuning for bulk-load: this database is a one-shot dump that can be
+        // regenerated if a crash leaves it inconsistent.
+        conn.pragma_update(None, "journal_mode", "OFF")?;
+        conn.pragma_update(None, "synchronous", "OFF")?;
+        conn.pragma_update(None, "temp_store", "MEMORY")?;
         conn.execute_batch(include_str!("database/schema.sql"))?;
         Ok(Self::new(conn))
     }
