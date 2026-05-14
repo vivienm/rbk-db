@@ -39,6 +39,12 @@ impl Database {
     {
         R::insert_many(&mut self.conn, rows)
     }
+
+    pub fn create_indexes(&self) -> anyhow::Result<()> {
+        self.conn
+            .execute_batch(include_str!("database/indexes.sql"))?;
+        Ok(())
+    }
 }
 
 #[allow(private_bounds)]

@@ -107,8 +107,6 @@ CREATE TABLE IF NOT EXISTS inventory_parts (
     UNIQUE (inventory_id, part_num, color_id, is_spare)
 ) STRICT;
 
-CREATE INDEX IF NOT EXISTS inventory_parts_part_num_idx ON inventory_parts(part_num);
-
 CREATE TABLE IF NOT EXISTS inventory_minifigs (
     inventory_id INTEGER NOT NULL
         REFERENCES inventories(id),

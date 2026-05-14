@@ -42,6 +42,8 @@ pub async fn run(args: Args) -> anyhow::Result<()> {
 
     let mut db = Database::open(db_path)?;
     copy_tables(temp_dir, &mut db)?;
+    tracing::info!("creating indexes");
+    db.create_indexes()?;
     Ok(())
 }
 
