@@ -12,10 +12,10 @@ use crate::{
 #[derive(Debug, clap::Parser)]
 pub struct Args {
     /// If the database file already exists, overwrite it.
-    #[clap(short, long)]
+    #[arg(short, long)]
     force: bool,
     /// The database file to create.
-    #[clap(default_value = "rebrickable.db", env = "RBK_DB_DATABASE")]
+    #[arg(default_value = "rebrickable.db", env = "RBK_DB_DATABASE")]
     database: PathBuf,
 }
 

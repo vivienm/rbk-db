@@ -6,7 +6,7 @@ mod types;
 use self::commands::Command;
 
 #[derive(Debug, clap::Parser)]
-#[clap(about)]
+#[command(about)]
 struct Args {
     /// Set the verbosity level for log messages.
     #[arg(global = true, long, default_value = "info", env = "RBK_DB_LOG_LEVEL")]
